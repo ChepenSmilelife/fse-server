@@ -6,6 +6,11 @@
 #include <QHostAddress>
 #include <QHostInfo>
 #include <QNetworkInterface>
+#include <QMessageBox>
+#include <QSqlDatabase>
+
+#include "databaseconfiguredialog.h"
+#include "querydialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -44,6 +49,8 @@ void MainWindow::initData()
     runningDay = runningSec = runningMin = runningHour = 0;
     timer = new QTimer(this);
     timer->start(1000);
+
+    db = NULL;
 }
 
 QString MainWindow::checkIPv4() const
@@ -132,3 +139,35 @@ void MainWindow::on_actionStartOrStop_triggered()
     else
         stopServer();
 }
+
+void MainWindow::on_actionAboutQt_triggered()
+{
+    qApp->aboutQt();
+}
+
+void MainWindow::on_actionConfigure_triggered()
+{
+    if(serverState == ServerWorking) {
+        int w = QMessageBox::warning(this, tr("Reconfigure Database?"),
+                                     tr("Server is working now...\n"
+                                        "you must stop server, if you want to reconfigure server.\n"
+                                        "Are you sure to stop server?"),
+                                     tr("Yes, I sure"), tr("No, thanks"));
+        if(w == 0)
+            stopServer();
+        else
+            return;
+    }
+    DatabaseConfigureDialog dbConfDialog;
+    dbConfDialog.setSqlDatabase(&db);
+    // init configure
+    if(db) {
+        dbConfDialog.setHostName(db->hostName());
+        dbConfDialog.setHostPort(db->port());
+        dbConfDialog.setUserName(db->userName());
+        dbConfDialog.setPassword(db->password());
+        dbConfDialog.setDatabaseName(db->databaseName());
+    }
+    dbConfDialog.exec();
+}
+

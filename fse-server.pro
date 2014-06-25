@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += core gui network sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,10 +13,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    databaseconfiguredialog.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    databaseconfiguredialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    databaseconfiguredialog.ui
 
 RESOURCES +=

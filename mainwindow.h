@@ -6,6 +6,7 @@
 QT_BEGIN_NAMESPACE
 class QCloseEvent;
 class QTimer;
+class QSqlDatabase;
 QT_END_NAMESPACE
 
 
@@ -32,6 +33,10 @@ private slots:
 
     void on_actionStartOrStop_triggered();
 
+    void on_actionAboutQt_triggered();
+
+    void on_actionConfigure_triggered();
+
 protected:
     void closeEvent(QCloseEvent *e);
     // check ipv4 address of current host
@@ -53,6 +58,8 @@ private:
     unsigned int runningHour;
     unsigned long runningDay;
     QTimer *timer;
+    QSqlDatabase *db;
+
 };
 
 #endif // MAINWINDOW_H
