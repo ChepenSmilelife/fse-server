@@ -10,7 +10,7 @@
 #include <QSqlDatabase>
 
 #include "databaseconfiguredialog.h"
-#include "querydialog.h"
+#include "sqldialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -171,3 +171,14 @@ void MainWindow::on_actionConfigure_triggered()
     dbConfDialog.exec();
 }
 
+
+void MainWindow::on_actionSQL_triggered()
+{
+    if(!db || !db->isOpen())
+        return;
+    else{
+        SQLDialog sqlDialog;
+        sqlDialog.initAll(db);
+        sqlDialog.exec();
+    }
+}

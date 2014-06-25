@@ -14,12 +14,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    databaseconfiguredialog.cpp
+    databaseconfiguredialog.cpp \
+    sqldialog.cpp
 
 HEADERS  += mainwindow.h \
-    databaseconfiguredialog.h
+    databaseconfiguredialog.h \
+    sqldialog.h
 
 FORMS    += mainwindow.ui \
-    databaseconfiguredialog.ui
+    databaseconfiguredialog.ui \
+    sqldialog.ui
 
 RESOURCES +=

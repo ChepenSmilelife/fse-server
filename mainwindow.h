@@ -37,6 +37,8 @@ private slots:
 
     void on_actionConfigure_triggered();
 
+    void on_actionSQL_triggered();
+
 protected:
     void closeEvent(QCloseEvent *e);
     // check ipv4 address of current host
