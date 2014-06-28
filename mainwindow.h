@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "fseserver.h"
 
 QT_BEGIN_NAMESPACE
 class QCloseEvent;
@@ -30,6 +31,8 @@ private slots:
     void runningTimeChange();
     void stateChange(ServerState st);
     void portChange(int p);
+    void logCollect(QString log);
+    void socketError(QAbstractSocket::SocketError error);
 
     void on_actionStartOrStop_triggered();
 
@@ -50,18 +53,22 @@ private:
     Ui::MainWindow *ui;
 
     void initData();
-    int serverPort;
-    QString IPv4;
-    QString hostname;
-    ServerState serverState;
     // running time
     unsigned int runningSec;
     unsigned int runningMin;
     unsigned int runningHour;
     unsigned long runningDay;
     QTimer *timer;
+    // database
     QSqlDatabase *db;
-
+    // network
+    QTcpServer *tcpServer;
+    int serverPort;
+    QString IPv4;
+    QString hostname;
+    ServerState serverState;
+    // multithread server
+    FSEServer *server;
 };
 
 #endif // MAINWINDOW_H

@@ -8,9 +8,15 @@
 #include <QNetworkInterface>
 #include <QMessageBox>
 #include <QSqlDatabase>
+#include <QTcpServer>
+#include <QTcpSocket>
+#include <QDateTime>
+
+#include <QDebug>
 
 #include "databaseconfiguredialog.h"
 #include "sqldialog.h"
+#include "socketerrorstring.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -51,6 +57,8 @@ void MainWindow::initData()
     timer->start(1000);
 
     db = NULL;
+
+    server = NULL;
 }
 
 QString MainWindow::checkIPv4() const
@@ -122,13 +130,59 @@ void MainWindow::portChange(int p)
     serverPort = p;
 }
 
+void MainWindow::logCollect(QString log)
+{
+    ui->textEditLog->append(QDateTime::currentDateTime().toLocalTime().toString("yyyy-MM-dd>HH:mm:ss")
+                            + "    " + log);
+}
+
+void MainWindow::socketError(QAbstractSocket::SocketError error)
+{
+    logCollect(socketErrorToString(error));
+}
+
 void MainWindow::startServer()
 {
-    stateChange(ServerWorking);
+    if(!db || !db->isOpen()) {
+        QMessageBox::information(this, tr("No database"),
+                                 tr("you need to configure database for server at first..."));
+        return;
+    }
+    if(server) {
+        server->close();
+        delete server;
+    }
+
+    server = new FSEServer(this);
+    server->setDatabase(db);
+
+    connect(server, SIGNAL(acceptError(QAbstractSocket::SocketError)),
+            this, SLOT(socketError(QAbstractSocket::SocketError)));
+    connect(server, SIGNAL(errorString(QString)),
+            this, SLOT(logCollect(QString)));
+    connect(server, SIGNAL(debugString(QString)),
+            this, SLOT(logCollect(QString)));
+
+    if(server->listen(QHostAddress(IPv4), serverPort)) {
+        logCollect(tr("start to listen ") + IPv4 + ":" +QString::number(serverPort));
+        stateChange(ServerWorking);
+    }
+    else {
+        qDebug() << "start failed" << server->serverError();
+        stopServer();
+    }
 }
 
 void MainWindow::stopServer()
 {
+    if(server) {
+        server->close();
+        delete server;
+    }
+
+    server = NULL;
+
+    logCollect(tr("stop to listen ") + IPv4 + ":" +QString::number(serverPort));
     stateChange(ServerStop);
 }
 
@@ -170,7 +224,6 @@ void MainWindow::on_actionConfigure_triggered()
     }
     dbConfDialog.exec();
 }
-
 
 void MainWindow::on_actionSQL_triggered()
 {

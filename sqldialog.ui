@@ -6,28 +6,75 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>630</width>
+    <width>815</width>
     <height>388</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>SQL</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>:/databaseop/T5.png</normaloff>:/databaseop/T5.png</iconset>
+  </property>
+  <property name="autoFillBackground">
+   <bool>true</bool>
   </property>
   <property name="styleSheet">
-   <string notr="true">font: 12pt &quot;Sans Serif&quot;;</string>
+   <string notr="true">font: 12pt &quot;Monospace&quot;;
+</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QLabel" name="labelTableList">
+   <item row="0" column="4">
+    <widget class="QPushButton" name="pushButtonKeyword">
+     <property name="focusPolicy">
+      <enum>Qt::ClickFocus</enum>
+     </property>
      <property name="text">
-      <string>Table</string>
+      <string>keywordSelect</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <widget class="QComboBox" name="comboBoxTableList"/>
+   <item row="0" column="3">
+    <widget class="QLineEdit" name="lineEditKeyword">
+     <property name="placeholderText">
+      <string>key word</string>
+     </property>
+     <property name="clearButtonEnabled">
+      <bool>true</bool>
+     </property>
+    </widget>
    </item>
-   <item row="0" column="2">
+   <item row="3" column="0">
+    <widget class="QPushButton" name="pushButtonInsertdata">
+     <property name="text">
+      <string>insertData</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="8">
+    <widget class="QTableView" name="tableView">
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(224, 221, 255);</string>
+     </property>
+     <property name="editTriggers">
+      <set>QAbstractItemView::AllEditTriggers</set>
+     </property>
+     <property name="sortingEnabled">
+      <bool>true</bool>
+     </property>
+     <attribute name="horizontalHeaderCascadingSectionResizes">
+      <bool>true</bool>
+     </attribute>
+    </widget>
+   </item>
+   <item row="0" column="6">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -40,40 +87,66 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="3">
-    <widget class="QPushButton" name="pushButtonRefresh">
+   <item row="3" column="2">
+    <widget class="QPushButton" name="pushButtonDeletedata">
      <property name="text">
-      <string>Refresh</string>
+      <string>deleteData</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="1" column="0" colspan="4">
-    <widget class="QTableView" name="tableView">
-     <property name="editTriggers">
-      <set>QAbstractItemView::NoEditTriggers</set>
-     </property>
-     <property name="sortingEnabled">
-      <bool>true</bool>
-     </property>
-     <attribute name="horizontalHeaderCascadingSectionResizes">
-      <bool>true</bool>
-     </attribute>
-    </widget>
-   </item>
-   <item row="2" column="0">
-    <widget class="QLabel" name="labelSQL">
+   <item row="3" column="1">
+    <widget class="QPushButton" name="pushButtonSavedata">
      <property name="text">
-      <string>SQL Command</string>
+      <string>saveData</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="2" column="1" colspan="3">
-    <widget class="QLineEdit" name="lineEditSQL">
+   <item row="3" column="3">
+    <widget class="QLabel" name="labelPwdToMD5">
+     <property name="text">
+      <string>String to MD5</string>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4" colspan="3">
+    <widget class="QLineEdit" name="lineEditPWD">
+     <property name="mouseTracking">
+      <bool>false</bool>
+     </property>
+     <property name="focusPolicy">
+      <enum>Qt::StrongFocus</enum>
+     </property>
+     <property name="whatsThis">
+      <string>press enter to translate</string>
+     </property>
      <property name="placeholderText">
-      <string>you can insert, alter, delete</string>
+      <string>translate string to md5 digest</string>
      </property>
      <property name="clearButtonEnabled">
       <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="5">
+    <widget class="QPushButton" name="pushButtonReturnTable">
+     <property name="text">
+      <string>returnTable</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="labelTableList">
+     <property name="text">
+      <string>UserInformation</string>
      </property>
     </widget>
    </item>

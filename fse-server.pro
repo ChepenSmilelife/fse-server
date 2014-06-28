@@ -15,11 +15,22 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     databaseconfiguredialog.cpp \
-    sqldialog.cpp
+    sqldialog.cpp \
+    sqlhelper.cpp \
+    md5.c \
+    fseserver.cpp \
+    fsethread.cpp \
+    socketerrorstring.cpp
 
 HEADERS  += mainwindow.h \
     databaseconfiguredialog.h \
-    sqldialog.h
+    sqldialog.h \
+    sqlhelper.h \
+    qmd5.h \
+    md5.h \
+    fseserver.h \
+    fsethread.h \
+    socketerrorstring.h
 
 FORMS    += mainwindow.ui \
     databaseconfiguredialog.ui \

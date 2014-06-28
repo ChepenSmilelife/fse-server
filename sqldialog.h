@@ -2,10 +2,13 @@
 #define SQLDIALOG_H
 
 #include <QDialog>
+#include <QSqlTableModel>
+#include <QSqlDatabase>
+#include <QSqlQueryModel>
 
 QT_BEGIN_NAMESPACE
 class QSqlDatabase;
-class QSqlQueryModel;
+class QSqlTableModel;
 QT_END_NAMESPACE
 
 namespace Ui {
@@ -24,12 +27,18 @@ public:
 
 public slots:
     void refresh();
-    void execSQL();
+    void insertdata();
+    void savedata();
+    void deletedata();
+    void keywordselect();
+
+private slots:
+    void changePWD();
 
 private:
     Ui::SQLDialog *ui;
     QSqlDatabase *db;
-    QSqlQueryModel *model;
+    QSqlTableModel*tableMode;
 };
 
 #endif // SQLDIALOG_H
