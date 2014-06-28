@@ -30,7 +30,8 @@ HEADERS  += mainwindow.h \
     md5.h \
     fseserver.h \
     fsethread.h \
-    socketerrorstring.h
+    socketerrorstring.h \
+    fseenum.h
 
 FORMS    += mainwindow.ui \
     databaseconfiguredialog.ui \

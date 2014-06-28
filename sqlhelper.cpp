@@ -7,62 +7,97 @@
 #include <QDateTime>
 #include <QDebug>
 
-#include "qmd5.h"
-static QString dateformat = "yyyy-MM-dd";
-
-bool addGroup(QSqlDatabase *db, GroupInfo group)
+int checkUser(QString username, QString password, QSqlDatabase *db)
 {
+    int uid = -1;
+    QString sql = QString("select uid from UserInfo "
+                          " where username = '%1' "
+                          " and "
+                          " password = '%2' ").arg(username).arg(password);
+    QSqlQuery query(sql, *db);
+
+    if(query.next()) {
+        uid = query.value(0).toInt();
+    }
+    return uid;
+}
+
+int getfid(QString fileMD5, QSqlDatabase *db)
+{
+    int fid = -1;
+    QString sql = QString("select fid from FileInfo "
+                          " where md5 = '%1'").arg(fileMD5);
+    QSqlQuery query(sql, *db);
+    if(query.next()) {
+        fid = query.value(0).toInt();
+    }
+    return fid;
+}
+
+int addFileMD5(QString fileMD5, QString pwdMD5, QSqlDatabase *db)
+{
+    int fid = -1;
     QSqlQuery query(*db);
-    query.prepare("insert into GroupInfo "
-                  "(groupname, password, description, createdate) "
-                  "values(:groupname, :password, :description, :createdate");
-    query.bindValue(":groupname", group.groupName);
-    query.bindValue(":password", group.passwordMD5);
-    query.bindValue(":description", group.description);
-    query.bindValue(":createdate", group.createDate);
+    query.prepare("insert into FileInfo (md5, password) "
+                  "values (:md5, :password)");
+    query.bindValue(":md5",fileMD5);
+    query.bindValue(":password",pwdMD5);
     if(query.exec())
-        return true;
-    else
-        return false;
+        fid = getfid(fileMD5, db);
+    return fid;
 }
 
-bool addUser(QSqlDatabase *db, const UserInfo &user, QString &errorText)
+int file2userExist(int fid, int uid, QSqlDatabase *db)
 {
-    QSqlQuery query(*db);
-    query.prepare("insert into UserInfo "
-                  "(gid, username, realname, password, age, valid,"
-                  "address, description, createdate)"
-                  "values(:gid, :username, :realname, :password,"
-                  ":age, :valid, :address, :description, :createdate)");
-    query.bindValue(":gid", user.gid);
-    query.bindValue(":username", user.username);
-    query.bindValue(":realname", user.realname);
-    query.bindValue(":password", user.md5password);
-    query.bindValue(":age", user.age);
-    query.bindValue(":valid", user.valid);
-    query.bindValue(":address", user.address);
-    query.bindValue(":description", user.description);
-    query.bindValue(":createdate",
-                    QDateTime::currentDateTime().toLocalTime().toString(dateformat));
-    if(!query.exec()) {
-        errorText = query.lastError().text();
-        return false;
-    }
-    else
-        return true;
+    int fuid = -1;
+    QString sql = QString("select fuid from File_User "
+                          " where fid = %1 "
+                          " and uid = %2").arg(fid).arg(uid);
+    QSqlQuery query(sql, *db);
+    if(query.next())
+        fuid = query.value(0).toInt();
+    return fuid;
 }
 
-bool deleteUser(QSqlDatabase *db, const QString username)
+int addFile2User(int fid, int uid, QString filename, QSqlDatabase *db)
 {
+    int fuid = file2userExist(fid, uid, db);
+    if(fuid != -1)
+        return -1;
     QSqlQuery query(*db);
-    QString sql = QString("select uid from UserInfo"
-                          " where username = %1").arg(username);
-    if(query.exec(sql) && query.next()) {
-        int uid = query.value("uid").toInt();
-        sql = QString("delete from File_User "
-                      " where uid = %1").arg(QString::number(uid));
-        if(query.exec(sql))
-            return true;
+    query.prepare("insert into File_User (fid, uid, filename, pushdate) "
+                  "values (:fid, :uid, :filename, :pushdate)");
+    query.bindValue(":fid", fid);
+    query.bindValue(":uid", uid);
+    query.bindValue(":filename", filename);
+    query.bindValue(":pushdate",
+                    QDateTime::currentDateTime().toLocalTime().toString("yyyy-MM-dd"));
+    if(query.exec())
+        fuid = file2userExist(fid, uid, db);
+    return fuid;
+}
+
+int addFile(QString fileName, QString fileMD5, QString pwdMD5, int uid, QSqlDatabase *db)
+{
+    int fid = getfid(fileMD5, db);
+    if(fid == -1) {
+        fid = addFileMD5(fileMD5, pwdMD5, db);
     }
-    return false;
+    qDebug() << "fid: "<< fid << "uid: " << uid;
+
+    int fuid = addFile2User(fid, uid, fileName, db);
+    return (fuid == -1) ? fuid : fid;
+}
+
+QString getFilePWD(QString fileMD5, int uid, QSqlDatabase *db)
+{
+    QString filePWD = "";
+    QString sql = QString("select FileInfo.password from FileInfo, File_User "
+                          " where FileInfo.fid = File_User.fid "
+                          " and File_User.uid = %1 "
+                          " and FileInfo.md5 = '%2' ").arg(uid).arg(fileMD5);
+    QSqlQuery query(sql, *db);
+    if(query.next())
+        filePWD = query.value(0).toString();
+    return filePWD;
 }

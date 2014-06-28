@@ -10,6 +10,7 @@ class QSqlDatabase;
 QT_END_NAMESPACE
 */
 #include <QSqlDatabase>
+#include "fseenum.h"
 
 class FSEThread : public QThread
 {
@@ -25,7 +26,11 @@ signals:
     void errorString(QString errorStr);
     void debugString(QString debug);
 
-public slots:
+protected:
+    void sendMessage(QTcpSocket *socket,const QList<QVariant> &block);
+    void processLogin(QTcpSocket *socket, FSEState state);
+    void processPushFilePWD(QTcpSocket *socket, int uid , QStringList argument);
+    void processPullFilePWD(QTcpSocket *socket, int uid , QStringList argument);
 
 private:
     //QMutex mutex;
