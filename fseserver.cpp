@@ -19,6 +19,7 @@ void FSEServer::incomingConnection(qintptr socketDescriptor)
     FSEThread *tcpThread = new FSEThread(socketDescriptor, db, this);
     connect(tcpThread, SIGNAL(errorString(QString)), this, SIGNAL(errorString(QString)));
     connect(tcpThread, SIGNAL(finished()), tcpThread, SLOT(deleteLater()));
+    connect(tcpThread, SIGNAL(debugString(QString)), this, SIGNAL(debugString(QString)));
     tcpThread->start();
 }
 
