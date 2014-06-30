@@ -35,6 +35,8 @@ public slots:
 private slots:
     void changePWD();
 
+    void on_lineEditKeyword_textChanged(const QString &arg1);
+
 private:
     Ui::SQLDialog *ui;
     QSqlDatabase *db;

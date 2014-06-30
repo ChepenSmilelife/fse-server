@@ -43,10 +43,6 @@ void SQLDialog::initAll(QSqlDatabase *db)
     ui->tableView->setModel(tableMode);
     connect(ui->lineEditPWD, SIGNAL(returnPressed()),
             this, SLOT(changePWD()));
-    connect(ui->pushButtonKeyword,SIGNAL(clicked()),
-            this,SLOT(keywordselect()));
-    connect(ui->pushButtonReturnTable,SIGNAL(clicked()),
-            this,SLOT(refresh()));
     connect(ui->pushButtonInsertdata,SIGNAL(clicked()),
             this,SLOT(insertdata()));
     connect(ui->pushButtonSavedata,SIGNAL(clicked()),
@@ -112,7 +108,7 @@ void SQLDialog::savedata()
 void SQLDialog::keywordselect()
 {
     tableMode->setTable("UserInfo");//设置查询当前表内容
-    QString keyword = ui->lineEditKeyword->text();//从输入框获取关键字
+    QString keyword = ui->lineEditKeyword->text().trimmed();//从输入框获取关键字
     int colm=tableMode->columnCount();//获取表的列数，然后一列一列的循环查询
     for(int i=1;i<=colm;i++)
     {
@@ -122,7 +118,7 @@ void SQLDialog::keywordselect()
             tableMode->select();
             break;
         case 2:
-            tableMode->setFilter(QObject::tr(" realname = '%1'").arg(keyword));
+            tableMode->setFilter(QObject::tr(" realname like \'%%1%\'").arg(keyword));
             tableMode->select();
             break;
         case 3:
@@ -130,7 +126,7 @@ void SQLDialog::keywordselect()
             tableMode->select();
             break;
         case 4:
-            tableMode->setFilter(QObject::tr(" username = %1").arg(keyword));
+            tableMode->setFilter(QObject::tr(" username like \'%%1%\'").arg(keyword));
             tableMode->select();
             break;
         case 5:
@@ -143,11 +139,10 @@ void SQLDialog::keywordselect()
         int crurow=tableMode->rowCount();//如果查询到结果，则停止查询。
         if(crurow>0)
         {
-        break;
+            break;
         }
     }
-
-    }
+}
 
 
 void SQLDialog::changePWD()
@@ -156,4 +151,14 @@ void SQLDialog::changePWD()
     QString newPwd = md5Str(tmpPwd);
     ui->lineEditPWD->setText(newPwd);
 
+}
+
+void SQLDialog::on_lineEditKeyword_textChanged(const QString &arg1)
+{
+    if(arg1.trimmed().isEmpty()) {
+        refresh();
+    }
+    else {
+        keywordselect();
+    }
 }

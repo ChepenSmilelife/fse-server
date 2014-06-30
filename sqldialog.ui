@@ -25,40 +25,44 @@
 </string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="4">
-    <widget class="QPushButton" name="pushButtonKeyword">
-     <property name="focusPolicy">
-      <enum>Qt::ClickFocus</enum>
-     </property>
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="labelTableList">
      <property name="text">
-      <string>keywordSelect</string>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
+      <string>UserInformation</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="3">
+   <item row="0" column="2" colspan="2">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>311</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="0" column="4">
+    <widget class="QLabel" name="labelKeyWord">
+     <property name="text">
+      <string>Key Word Search</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="5">
     <widget class="QLineEdit" name="lineEditKeyword">
      <property name="placeholderText">
-      <string>key word</string>
+      <string>fileter</string>
      </property>
      <property name="clearButtonEnabled">
       <bool>true</bool>
      </property>
     </widget>
    </item>
-   <item row="3" column="0">
-    <widget class="QPushButton" name="pushButtonInsertdata">
-     <property name="text">
-      <string>insertData</string>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="0" colspan="8">
+   <item row="1" column="0" colspan="6">
     <widget class="QTableView" name="tableView">
      <property name="styleSheet">
       <string notr="true">background-color: rgb(224, 221, 255);</string>
@@ -74,30 +78,17 @@
      </attribute>
     </widget>
    </item>
-   <item row="0" column="6">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>311</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="3" column="2">
-    <widget class="QPushButton" name="pushButtonDeletedata">
+   <item row="2" column="0">
+    <widget class="QPushButton" name="pushButtonInsertdata">
      <property name="text">
-      <string>deleteData</string>
+      <string>insertData</string>
      </property>
      <property name="autoDefault">
       <bool>false</bool>
      </property>
     </widget>
    </item>
-   <item row="3" column="1">
+   <item row="2" column="1">
     <widget class="QPushButton" name="pushButtonSavedata">
      <property name="text">
       <string>saveData</string>
@@ -107,14 +98,37 @@
      </property>
     </widget>
    </item>
-   <item row="3" column="3">
+   <item row="2" column="2">
+    <widget class="QPushButton" name="pushButtonDeletedata">
+     <property name="text">
+      <string>deleteData</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="3">
+    <spacer name="horizontalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>151</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="2" column="4">
     <widget class="QLabel" name="labelPwdToMD5">
      <property name="text">
       <string>String to MD5</string>
      </property>
     </widget>
    </item>
-   <item row="3" column="4" colspan="3">
+   <item row="2" column="5">
     <widget class="QLineEdit" name="lineEditPWD">
      <property name="mouseTracking">
       <bool>false</bool>
@@ -130,23 +144,6 @@
      </property>
      <property name="clearButtonEnabled">
       <bool>true</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="5">
-    <widget class="QPushButton" name="pushButtonReturnTable">
-     <property name="text">
-      <string>returnTable</string>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QLabel" name="labelTableList">
-     <property name="text">
-      <string>UserInformation</string>
      </property>
     </widget>
    </item>
