@@ -11,6 +11,7 @@
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QDateTime>
+#include <QDir>
 
 #include <QDebug>
 
@@ -42,6 +43,21 @@ MainWindow::~MainWindow()
 
 void MainWindow::closeEvent(QCloseEvent *e)
 {
+    QString log = ui->textEditLog->toPlainText();
+    if(!log.isEmpty()) {
+        QString logDir = "log";
+        QDir dir(QDir::current());
+        dir.mkdir(logDir);
+        if(dir.cd(logDir)) {
+            QString logFormat = "yyyy-MM-dd-hh.mm.ss.log";
+            QString path = dir.filePath(QDateTime::currentDateTime().toLocalTime().toString(logFormat));
+            QFile logFile(path);
+            if(logFile.open(QIODevice::WriteOnly)) {
+                QTextStream out(&logFile);
+                out << log;
+            }
+        }
+    }
     e->accept();
 }
 
