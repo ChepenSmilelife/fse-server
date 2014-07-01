@@ -37,4 +37,8 @@ FORMS    += mainwindow.ui \
     databaseconfiguredialog.ui \
     sqldialog.ui
 
-RESOURCES +=
+RESOURCES += \
+    resource.qrc
+
+TRANSLATIONS += \
+    server-lang-zh_cn.qm
