@@ -80,7 +80,9 @@ void MainWindow::initData()
 QString MainWindow::checkIPv4() const
 {
     QString ipv4;
-    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    //QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    QHostInfo host = QHostInfo::fromName(QHostInfo::localHostName());
+    QList<QHostAddress> ipAddressesList = host.addresses();
     // use first non-localhost IPv4 address
     for(int i = 0; i < ipAddressesList.size(); ++i)
     {
