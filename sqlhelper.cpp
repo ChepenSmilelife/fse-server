@@ -10,7 +10,8 @@
 int checkUser(QString username, QString password, QSqlDatabase *db)
 {
     int uid = -1;
-    QString sql = QString("select uid from UserInfo "
+    bool valid = true;
+    QString sql = QString("select uid, valid from UserInfo "
                           " where username = '%1' "
                           " and "
                           " password = '%2' ").arg(username).arg(password);
@@ -18,7 +19,10 @@ int checkUser(QString username, QString password, QSqlDatabase *db)
 
     if(query.next()) {
         uid = query.value(0).toInt();
+        valid = query.value(1).toBool();
     }
+    if(!valid)
+        uid = -1;
     return uid;
 }
 
@@ -100,4 +104,53 @@ QString getFilePWD(QString fileMD5, int uid, QSqlDatabase *db)
     if(query.next())
         filePWD = query.value(0).toString();
     return filePWD;
+}
+
+QStringList getUserInfo(int uid, QSqlDatabase *db)
+{
+    QStringList info;
+    QString sql = QString("select username, realname, age, address, description "
+                          " from UserInfo "
+                          " where uid = %1 ").arg(uid);
+    QSqlQuery query(sql, *db);
+    if(query.next()) {
+        info << query.value(0).toString()
+             << query.value(1).toString()
+             << QString::number(query.value(2).toInt())
+             << query.value(3).toString()
+             << query.value(4).toString();
+    }
+    return info;
+}
+
+bool modifyUserInfo(int uid, QStringList args, QSqlDatabase *db)
+{
+    QSqlQuery query(*db);
+    if(args[4].isEmpty()) {
+        query.prepare("update UserInfo "
+                      " set realname = :realname, age = :age, "
+                      "     address = :address, description = :desc "
+                      " where uid = :uid ");
+        query.bindValue(":realname", args[0]);
+        query.bindValue(":age", args[1].toInt());
+        query.bindValue(":address", args[2]);
+        query.bindValue(":desc", args[3]);
+        query.bindValue(":uid", uid);
+    }
+    else {
+        query.prepare("update UserInfo "
+                      " set realname = :realname, age = :age, "
+                      "     address = :address, description = :desc, "
+                      "     password = :pwd "
+                      " where uid = :uid ");
+        query.bindValue(":realname", args[0]);
+        query.bindValue(":age", args[1].toInt());
+        query.bindValue(":address", args[2]);
+        query.bindValue(":desc", args[3]);
+        query.bindValue(":pwd", args[4]);
+        query.bindValue(":uid", uid);
+    }
+    if(query.exec())
+        return true;
+    return false;
 }

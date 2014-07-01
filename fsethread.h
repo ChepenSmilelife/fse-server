@@ -31,6 +31,8 @@ protected:
     void processLogin(QTcpSocket *socket, FSEState state);
     void processPushFilePWD(QTcpSocket *socket, int uid , QStringList argument);
     void processPullFilePWD(QTcpSocket *socket, int uid , QStringList argument);
+    void processPullUserInfo(QTcpSocket *socket, int uid);
+    void processPushUserInfo(QTcpSocket *socket, int uid, QStringList argument);
 
 private:
     //QMutex mutex;

@@ -16,19 +16,37 @@
  *                      - filename
  *                      - filemd5
  *                      - filepassword(MD5)
+ *
  *              2>  PullFilePassword argument type is QStringList
- *                      - filename
- *                      - filemd5
+ *                      - filemd5       QString
+ *
+ *              3>  PullUserInfoCMD     argument is empty
+ *
+ *              4>  PushUserInfoCMD     argument type is QStringList
+ *                      - realname      QString
+ *                      - age           QString
+ *                      - address       QString
+ *                      - description   QString
+ *                      [- password     QString]  new password
  *
  * message return: QList<QVariant>
  *      length + state + [description]
+ *
+ *      PullUserInfoCMD + ...
+ *                      - username      QString
+ *                      - realname      QString
+ *                      - age           QString
+ *                      - address       QString
+ *                      - description   QString
  */
 
 
 enum FSECommandType {
     LoginCMD,
     PushFilePasswordCMD,
-    PullFilePasswordCMD
+    PullFilePasswordCMD,
+    PushUserInfoCMD,
+    PullUserInfoCMD
 };
 
 enum FSEState {
@@ -37,7 +55,11 @@ enum FSEState {
     PushFilePWDSuccessState,
     PushFilePWDFailedState,
     PullFilePWDSuccessState,
-    PullFilePWDFailedState
+    PullFilePWDFailedState,
+    PushUserInfoSuccessState,
+    PushUserInfoFailState,
+    PullUserInfoSuccessState,
+    PullUserInfoFailState
 };
 
 

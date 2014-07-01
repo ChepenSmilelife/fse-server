@@ -253,24 +253,14 @@ color: rgb(148, 191, 243);</string>
     <addaction name="separator"/>
     <addaction name="actionConfigure"/>
    </widget>
-   <widget class="QMenu" name="menuSetting">
-    <property name="title">
-     <string>Setting</string>
-    </property>
-    <addaction name="actionPreferences"/>
-   </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
      <string>About</string>
     </property>
     <addaction name="actionAboutQt"/>
-    <addaction name="actionAbout"/>
-    <addaction name="separator"/>
-    <addaction name="actionHelp"/>
    </widget>
    <addaction name="menuServer"/>
    <addaction name="menuDatabase"/>
-   <addaction name="menuSetting"/>
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">

@@ -77,14 +77,32 @@ void FSEThread::run()
         case LoginCMD:
             emit debugString("[" + username + "]["
                              + tcpSocket.peerAddress().toString()
-                             + "]" + tr(" login successfully"));
+                             + "]" + tr("login successfully"));
             processLogin(&tcpSocket, LoginSuccessState);
             break;
         case PushFilePasswordCMD:
+            emit debugString("[" + username + "]["
+                             + tcpSocket.peerAddress().toString()
+                             + "] " + tr("try to push file to server"));
             processPushFilePWD(&tcpSocket, uid, message.takeFirst().toStringList());
             break;
         case PullFilePasswordCMD:
+            emit debugString("[" + username + "]["
+                             + tcpSocket.peerAddress().toString()
+                             + "] " + tr("try to pull file key from server"));
             processPullFilePWD(&tcpSocket, uid, message.takeFirst().toStringList());
+            break;
+        case PullUserInfoCMD:
+            emit debugString("[" + username + "]["
+                             + tcpSocket.peerAddress().toString()
+                             + "] " + tr("try to pull user information"));
+            processPullUserInfo(&tcpSocket, uid);
+            break;
+        case PushUserInfoCMD:
+            emit debugString("[" + username + "]["
+                             + tcpSocket.peerAddress().toString()
+                             + "] " + tr("try to update user information"));
+            processPushUserInfo(&tcpSocket, uid, message.takeFirst().toStringList());
             break;
         default:
             break;
@@ -171,6 +189,40 @@ void FSEThread::processPullFilePWD(QTcpSocket *socket, int uid, QStringList argu
     QList<QVariant> block;
     block << QVariant( error ? PullFilePWDFailedState : PullFilePWDSuccessState )
              << QVariant( error ? tr("File not exist") : pwd );
+
+    sendMessage(socket, block);
+}
+
+void FSEThread::processPullUserInfo(QTcpSocket *socket, int uid)
+{
+    FSEState st = PullUserInfoSuccessState;
+    QStringList info = getUserInfo(uid, db);
+    if(info.size() == 0) {
+        st = PullUserInfoFailState;
+    }
+    QList<QVariant> block;
+    block << QVariant(st) << QVariant(info);
+    sendMessage(socket, block);
+}
+
+void FSEThread::processPushUserInfo(QTcpSocket *socket, int uid, QStringList argument)
+{
+    QString description;
+    FSEState st = PushUserInfoSuccessState;
+    if(argument.size() < 5) {
+        st = PushUserInfoFailState;
+        description = tr("information is too few, update failed");
+    }
+    else {
+        bool isOK = modifyUserInfo(uid, argument, db);
+        if(!isOK) {
+            st = PushUserInfoFailState;
+            description = tr("update failed, database forbid");
+        }else description = tr("user information update successfully");
+    }
+    debugString(description);
+    QList<QVariant> block;
+    block << QVariant(st) << QVariant(description);
 
     sendMessage(socket, block);
 }

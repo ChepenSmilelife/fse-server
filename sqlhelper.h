@@ -29,4 +29,9 @@ int addFile(QString fileName, QString fileMD5, QString pwdMD5, int uid, QSqlData
 
 QString getFilePWD(QString fileMD5, int uid, QSqlDatabase *db);
 
+QStringList getUserInfo(int uid, QSqlDatabase *db);
+
+// realname, age, address, description, [pwd]
+bool modifyUserInfo(int uid, QStringList args ,QSqlDatabase *db);
+
 #endif // SQLHELPER_H
