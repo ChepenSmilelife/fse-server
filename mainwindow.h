@@ -30,7 +30,6 @@ private slots:
     void stopServer();
     void runningTimeChange();
     void stateChange(ServerState st);
-    void portChange(int p);
     void logCollect(QString log);
     void socketError(QAbstractSocket::SocketError error);
 
@@ -42,17 +41,13 @@ private slots:
 
     void on_actionSQL_triggered();
 
+    void on_spinBoxPort_valueChanged(int arg1);
+
 protected:
     void closeEvent(QCloseEvent *e);
-    // check ipv4 address of current host
-    QString checkIPv4() const;
-    // check hostname of current host
-    QString checkHostname() const;
 
 private:
     Ui::MainWindow *ui;
-
-    void initData();
     // running time
     unsigned int runningSec;
     unsigned int runningMin;
@@ -65,7 +60,6 @@ private:
     QTcpServer *tcpServer;
     int serverPort;
     QString IPv4;
-    QString hostname;
     ServerState serverState;
     // multithread server
     FSEServer *server;

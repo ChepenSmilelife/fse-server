@@ -61,9 +61,9 @@ void DatabaseConfigureDialog::confirmDatabase()
 
         }
         {
-            QSqlDatabase tmpdb = QSqlDatabase::database(defaultConName);
             delete *db;
             *db = NULL;
+            QSqlDatabase tmpdb = QSqlDatabase::database(defaultConName);
         }
         QSqlDatabase::removeDatabase(defaultConName);
     }
@@ -72,7 +72,7 @@ void DatabaseConfigureDialog::confirmDatabase()
     *db = new QSqlDatabase(QSqlDatabase::addDatabase(ui->comboBoxDBType->currentText(),
                                     defaultConName));
 
-    if(!ui->checkBox->isChecked()) {
+    if(!ui->checkBox->isChecked() && ui->comboBoxDBType->currentText() != "QSQLITE") {
         (*db)->setHostName(ui->lineEditDBHost->text());
         (*db)->setUserName(ui->lineEditDBUser->text());
         (*db)->setPassword(ui->lineEditDBPassword->text());

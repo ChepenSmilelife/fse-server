@@ -25,15 +25,32 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    initData();
+    // get ipv4 address list
+    QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
+    for(int i = 0; i < ipAddressesList.size(); ++i)
+    {
+        QTcpServer testServer;
+        if( ipAddressesList[i].toIPv4Address() && testServer.listen(ipAddressesList[i], 9876) ) {
+            testServer.close();
+            ui->comboBox->addItem(ipAddressesList[i].toString());
+        }
+    }
 
-    ui->lineEditIPv4->setText(IPv4);
-    ui->lineEditHostname->setText(hostname);
+    ui->lineEditHostname->setText(QHostInfo::localHostName());
+
+    IPv4 = ui->comboBox->currentText();
+    serverPort = ui->spinBoxPort->value();
+    serverState = ServerStop;
+
+    runningDay = runningSec = runningMin = runningHour = 0;
+    timer = new QTimer(this);
+    timer->start(1000); // msec
+
+    db = NULL;
+    server = NULL;
 
     connect(timer, SIGNAL(timeout()),
             this, SLOT(runningTimeChange()));
-    connect(ui->spinBoxPort, SIGNAL(valueChanged(int)),
-            this, SLOT(portChange(int)));
 }
 
 MainWindow::~MainWindow()
@@ -59,48 +76,6 @@ void MainWindow::closeEvent(QCloseEvent *e)
         }
     }
     e->accept();
-}
-
-void MainWindow::initData()
-{
-    IPv4 = checkIPv4();
-    hostname = checkHostname();
-    serverPort = ui->spinBoxPort->value();
-    serverState = ServerStop;
-
-    runningDay = runningSec = runningMin = runningHour = 0;
-    timer = new QTimer(this);
-    timer->start(1000);
-
-    db = NULL;
-
-    server = NULL;
-}
-
-QString MainWindow::checkIPv4() const
-{
-    QString ipv4;
-    //QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
-    QHostInfo host = QHostInfo::fromName(QHostInfo::localHostName());
-    QList<QHostAddress> ipAddressesList = host.addresses();
-    // use first non-localhost IPv4 address
-    for(int i = 0; i < ipAddressesList.size(); ++i)
-    {
-        if( ipAddressesList[i] != QHostAddress::LocalHost
-                &&  ipAddressesList[i].toIPv4Address())
-        {
-            ipv4 = ipAddressesList[i].toString();
-            break;
-        }
-    }
-    if(ipv4.isEmpty())
-        ipv4 = QHostAddress(QHostAddress::LocalHost).toString();
-    return ipv4;
-}
-
-QString MainWindow::checkHostname() const
-{
-    return QHostInfo::localHostName();
 }
 
 void MainWindow::runningTimeChange()
@@ -132,20 +107,17 @@ void MainWindow::stateChange(ServerState st)
         state = tr("working");
         ui->actionStartOrStop->setText(tr("Stop"));
         ui->spinBoxPort->setEnabled(false);
+        ui->comboBox->setEnabled(false);
         break;
     default:
         state = tr("stop");
         ui->actionStartOrStop->setText(tr("Start"));
         ui->spinBoxPort->setEnabled(true);
+        ui->comboBox->setEnabled(true);
         break;
     }
     ui->lineEditState->setText(state);
     serverState = st;
-}
-
-void MainWindow::portChange(int p)
-{
-    serverPort = p;
 }
 
 void MainWindow::logCollect(QString log)
@@ -252,4 +224,9 @@ void MainWindow::on_actionSQL_triggered()
         sqlDialog.initAll(db);
         sqlDialog.exec();
     }
+}
+
+void MainWindow::on_spinBoxPort_valueChanged(int arg1)
+{
+    serverPort = arg1;
 }

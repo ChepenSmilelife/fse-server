@@ -65,7 +65,7 @@
    <item row="1" column="0" colspan="6">
     <widget class="QTableView" name="tableView">
      <property name="styleSheet">
-      <string notr="true">background-color: rgb(224, 221, 255);</string>
+      <string notr="true"/>
      </property>
      <property name="editTriggers">
       <set>QAbstractItemView::AllEditTriggers</set>
